@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nuc.movie.dao.MovieMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.nuc.movie.entity.Movie">
+    <id column="movieid" jdbcType="INTEGER" property="movieid" />
+    <result column="csid" jdbcType="INTEGER" property="csid" />
+    <result column="mname" jdbcType="VARCHAR" property="mname" />
+    <result column="mdirector" jdbcType="VARCHAR" property="mdirector" />
+    <result column="mstar" jdbcType="VARCHAR" property="mstar" />
+    <result column="mtype" jdbcType="VARCHAR" property="mtype" />
+    <result column="mcountry" jdbcType="VARCHAR" property="mcountry" />
+    <result column="mstory" jdbcType="VARCHAR" property="mstory" />
+    <result column="mduration" jdbcType="VARCHAR" property="mduration" />
+    <result column="mpremiere" jdbcType="DATE" property="mpremiere" />
+    <result column="mis_hot" jdbcType="INTEGER" property="misHot" />
+    <result column="mimage" jdbcType="VARCHAR" property="mimage" />
+    <result column="marketprice" jdbcType="DOUBLE" property="marketprice" />
+    <result column="shopprice" jdbcType="DOUBLE" property="shopprice" />
+    <result column="mticketcount" jdbcType="VARCHAR" property="mticketcount" />
+    <result column="mscore" jdbcType="REAL" property="mscore" />
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    movieid, csid, mname, mdirector, mstar, mtype, mcountry, mstory, mduration, mpremiere, 
+    mis_hot, mimage, marketprice, shopprice, mticketcount, mscore
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from movie
+    where movieid = #{movieid,jdbcType=INTEGER}
+  </select>
+  
+  <select id="findMovieCount" resultType="int">
+      select count(*) from Movie
+  </select>
+    <select id="findMovieCountCid" parameterType="java.lang.Integer" resultType="int">
+      select count(*) from Movie where csid in(select csid from categorysecond cs where cs.cid = #{cid})
+  </select>
+  <select id="findMovieCountCsid" parameterType="java.lang.Integer" resultType="int">
+      select count(*) from Movie where csid = #{csid}
+  </select>
+  <select id="findByPage" parameterType="int" resultType="cn.edu.nuc.movie.entity.Movie">
+      SELECT
+		<include refid="Base_Column_List" />
+	  FROM
+		movie 
+	ORDER BY
+		mpremiere DESC
+	LIMIT #{begin},#{limit}
+  </select>
+    <select id="findByPageCid" parameterType="int" resultType="cn.edu.nuc.movie.entity.Movie">
+      SELECT
+		<include refid="Base_Column_List" />
+	  FROM
+		movie 
+    where csid in(select csid from categorysecond cs where cs.cid = #{cid})
+	ORDER BY
+		mpremiere DESC
+	LIMIT #{begin},#{limit}
+  </select>
+      <select id="findByPageCsid" parameterType="int" resultType="cn.edu.nuc.movie.entity.Movie">
+      SELECT
+		<include refid="Base_Column_List" />
+	  FROM
+		movie 
+    where csid = #{csid}
+	ORDER BY
+		mpremiere DESC
+	LIMIT #{begin},#{limit}
+  </select>
+  <select id="listMovieNew" resultType="cn.edu.nuc.movie.entity.Movie">
+  	  select
+  			<include refid="Base_Column_List"/>
+  	  from movie
+  	  order by mpremiere desc limit 0,10 
+  </select>
+  <select id="listMovieHot" resultType="cn.edu.nuc.movie.entity.Movie">
+  	  select
+  			<include refid="Base_Column_List"/>
+  	  from movie
+  	  where mis_hot=1
+  	  limit 0,10 
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from movie
+    where movieid = #{movieid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.nuc.movie.entity.Movie">
+    insert into movie (movieid, csid, mname, 
+      mdirector, mstar, mtype, 
+      mcountry, mstory, mduration, 
+      mpremiere, mis_hot, mimage, 
+      marketprice, shopprice, mticketcount, 
+      mscore)
+    values (#{movieid,jdbcType=INTEGER}, #{csid,jdbcType=INTEGER}, #{mname,jdbcType=VARCHAR}, 
+      #{mdirector,jdbcType=VARCHAR}, #{mstar,jdbcType=VARCHAR}, #{mtype,jdbcType=VARCHAR}, 
+      #{mcountry,jdbcType=VARCHAR}, #{mstory,jdbcType=VARCHAR}, #{mduration,jdbcType=VARCHAR}, 
+      #{mpremiere,jdbcType=DATE}, #{misHot,jdbcType=INTEGER}, #{mimage,jdbcType=VARCHAR}, 
+      #{marketprice,jdbcType=DECIMAL}, #{shopprice,jdbcType=DECIMAL}, #{mticketcount,jdbcType=VARCHAR}, 
+      #{mscore,jdbcType=REAL})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.nuc.movie.entity.Movie">
+    insert into movie
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="movieid != null">
+        movieid,
+      </if>
+      <if test="csid != null">
+        csid,
+      </if>
+      <if test="mname != null">
+        mname,
+      </if>
+      <if test="mdirector != null">
+        mdirector,
+      </if>
+      <if test="mstar != null">
+        mstar,
+      </if>
+      <if test="mtype != null">
+        mtype,
+      </if>
+      <if test="mcountry != null">
+        mcountry,
+      </if>
+      <if test="mstory != null">
+        mstory,
+      </if>
+      <if test="mduration != null">
+        mduration,
+      </if>
+      <if test="mpremiere != null">
+        mpremiere,
+      </if>
+      <if test="misHot != null">
+        mis_hot,
+      </if>
+      <if test="mimage != null">
+        mimage,
+      </if>
+      <if test="marketprice != null">
+        marketprice,
+      </if>
+      <if test="shopprice != null">
+        shopprice,
+      </if>
+      <if test="mticketcount != null">
+        mticketcount,
+      </if>
+      <if test="mscore != null">
+        mscore,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="movieid != null">
+        #{movieid,jdbcType=INTEGER},
+      </if>
+      <if test="csid != null">
+        #{csid,jdbcType=INTEGER},
+      </if>
+      <if test="mname != null">
+        #{mname,jdbcType=VARCHAR},
+      </if>
+      <if test="mdirector != null">
+        #{mdirector,jdbcType=VARCHAR},
+      </if>
+      <if test="mstar != null">
+        #{mstar,jdbcType=VARCHAR},
+      </if>
+      <if test="mtype != null">
+        #{mtype,jdbcType=VARCHAR},
+      </if>
+      <if test="mcountry != null">
+        #{mcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="mstory != null">
+        #{mstory,jdbcType=VARCHAR},
+      </if>
+      <if test="mduration != null">
+        #{mduration,jdbcType=VARCHAR},
+      </if>
+      <if test="mpremiere != null">
+        #{mpremiere,jdbcType=DATE},
+      </if>
+      <if test="misHot != null">
+        #{misHot,jdbcType=INTEGER},
+      </if>
+      <if test="mimage != null">
+        #{mimage,jdbcType=VARCHAR},
+      </if>
+      <if test="marketprice != null">
+        #{marketprice,jdbcType=DECIMAL},
+      </if>
+      <if test="shopprice != null">
+        #{shopprice,jdbcType=DECIMAL},
+      </if>
+      <if test="mticketcount != null">
+        #{mticketcount,jdbcType=VARCHAR},
+      </if>
+      <if test="mscore != null">
+        #{mscore,jdbcType=REAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.nuc.movie.entity.Movie">
+    update movie
+    <set>
+      <if test="csid != null">
+        csid = #{csid,jdbcType=INTEGER},
+      </if>
+      <if test="mname != null">
+        mname = #{mname,jdbcType=VARCHAR},
+      </if>
+      <if test="mdirector != null">
+        mdirector = #{mdirector,jdbcType=VARCHAR},
+      </if>
+      <if test="mstar != null">
+        mstar = #{mstar,jdbcType=VARCHAR},
+      </if>
+      <if test="mtype != null">
+        mtype = #{mtype,jdbcType=VARCHAR},
+      </if>
+      <if test="mcountry != null">
+        mcountry = #{mcountry,jdbcType=VARCHAR},
+      </if>
+      <if test="mstory != null">
+        mstory = #{mstory,jdbcType=VARCHAR},
+      </if>
+      <if test="mduration != null">
+        mduration = #{mduration,jdbcType=VARCHAR},
+      </if>
+      <if test="mpremiere != null">
+        mpremiere = #{mpremiere,jdbcType=DATE},
+      </if>
+      <if test="misHot != null">
+        mis_hot = #{misHot,jdbcType=INTEGER},
+      </if>
+      <if test="mimage != null">
+        mimage = #{mimage,jdbcType=VARCHAR},
+      </if>
+      <if test="marketprice != null">
+        marketprice = #{marketprice,jdbcType=DECIMAL},
+      </if>
+      <if test="shopprice != null">
+        shopprice = #{shopprice,jdbcType=DECIMAL},
+      </if>
+      <if test="mticketcount != null">
+        mticketcount = #{mticketcount,jdbcType=VARCHAR},
+      </if>
+      <if test="mscore != null">
+        mscore = #{mscore,jdbcType=REAL},
+      </if>
+    </set>
+    where movieid = #{movieid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.nuc.movie.entity.Movie">
+    update movie
+    set csid = #{csid,jdbcType=INTEGER},
+      mname = #{mname,jdbcType=VARCHAR},
+      mdirector = #{mdirector,jdbcType=VARCHAR},
+      mstar = #{mstar,jdbcType=VARCHAR},
+      mtype = #{mtype,jdbcType=VARCHAR},
+      mcountry = #{mcountry,jdbcType=VARCHAR},
+      mstory = #{mstory,jdbcType=VARCHAR},
+      mduration = #{mduration,jdbcType=VARCHAR},
+      mpremiere = #{mpremiere,jdbcType=DATE},
+      mis_hot = #{misHot,jdbcType=INTEGER},
+      mimage = #{mimage,jdbcType=VARCHAR},
+      marketprice = #{marketprice,jdbcType=DECIMAL},
+      shopprice = #{shopprice,jdbcType=DECIMAL},
+      mticketcount = #{mticketcount,jdbcType=VARCHAR},
+      mscore = #{mscore,jdbcType=REAL}
+    where movieid = #{movieid,jdbcType=INTEGER}
+  </update>
+</mapper>

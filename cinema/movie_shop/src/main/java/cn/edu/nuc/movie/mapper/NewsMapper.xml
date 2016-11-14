@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nuc.movie.dao.NewsMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.nuc.movie.entity.News">
+    <id column="newsid" jdbcType="INTEGER" property="newsid" />
+    <result column="newscontent" jdbcType="VARCHAR" property="newscontent" />
+    <result column="newstime" jdbcType="DATE" property="newstime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    newsid, newscontent, newstime
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from news
+    where newsid = #{newsid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from news
+    where newsid = #{newsid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.nuc.movie.entity.News">
+    insert into news (newsid, newscontent, newstime
+      )
+    values (#{newsid,jdbcType=INTEGER}, #{newscontent,jdbcType=VARCHAR}, #{newstime,jdbcType=DATE}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.nuc.movie.entity.News">
+    insert into news
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="newsid != null">
+        newsid,
+      </if>
+      <if test="newscontent != null">
+        newscontent,
+      </if>
+      <if test="newstime != null">
+        newstime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="newsid != null">
+        #{newsid,jdbcType=INTEGER},
+      </if>
+      <if test="newscontent != null">
+        #{newscontent,jdbcType=VARCHAR},
+      </if>
+      <if test="newstime != null">
+        #{newstime,jdbcType=DATE},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.nuc.movie.entity.News">
+    update news
+    <set>
+      <if test="newscontent != null">
+        newscontent = #{newscontent,jdbcType=VARCHAR},
+      </if>
+      <if test="newstime != null">
+        newstime = #{newstime,jdbcType=DATE},
+      </if>
+    </set>
+    where newsid = #{newsid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.nuc.movie.entity.News">
+    update news
+    set newscontent = #{newscontent,jdbcType=VARCHAR},
+      newstime = #{newstime,jdbcType=DATE}
+    where newsid = #{newsid,jdbcType=INTEGER}
+  </update>
+</mapper>

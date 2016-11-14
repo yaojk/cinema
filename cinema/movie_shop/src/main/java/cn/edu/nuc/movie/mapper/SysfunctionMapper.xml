@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nuc.movie.dao.SysfunctionMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.nuc.movie.entity.Sysfunction">
+    <id column="funid" jdbcType="INTEGER" property="funid" />
+    <result column="sys_funid" jdbcType="INTEGER" property="sysFunid" />
+    <result column="funname" jdbcType="VARCHAR" property="funname" />
+    <result column="funurl" jdbcType="VARCHAR" property="funurl" />
+    <result column="funstate" jdbcType="INTEGER" property="funstate" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    funid, sys_funid, funname, funurl, funstate
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from sysfunction
+    where funid = #{funid,jdbcType=INTEGER}
+  </select>
+  <!-- 查询所有 -->
+  <select id = "selectAll" resultMap = "BaseResultMap">
+  	SELECT A.funid,A.FUNNAME,A.FUNURL,A.sys_funid,A.FUNSTATE,
+				(CASE WHEN B.FUNNAME IS NULL THEN '无' ELSE B.FUNNAME END) AS FUNPNAME
+				 FROM SYSFUNCTION A 
+				LEFT OUTER JOIN SYSFUNCTION B ON A.sys_funid=B.FUNID  
+  </select>
+  <!-- 按功能名称查询 -->
+  <select id="findByFun" parameterType="string" resultType="Sysfunction">
+  	select 
+  	<include refid="Base_Column_List" />
+  	from sysfunction
+  	where FUNNAME = #{funname,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sysfunction
+    where funid = #{funid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.nuc.movie.entity.Sysfunction">
+    insert into sysfunction (funid, sys_funid, funname, 
+      funurl, funstate)
+    values (#{funid,jdbcType=INTEGER}, #{sysFunid,jdbcType=INTEGER}, #{funname,jdbcType=VARCHAR}, 
+      #{funurl,jdbcType=VARCHAR}, #{funstate,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.nuc.movie.entity.Sysfunction">
+    insert into sysfunction
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="funid != null">
+        funid,
+      </if>
+      <if test="sysFunid != null">
+        sys_funid,
+      </if>
+      <if test="funname != null">
+        funname,
+      </if>
+      <if test="funurl != null">
+        funurl,
+      </if>
+      <if test="funstate != null">
+        funstate,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="funid != null">
+        #{funid,jdbcType=INTEGER},
+      </if>
+      <if test="sysFunid != null">
+        #{sysFunid,jdbcType=INTEGER},
+      </if>
+      <if test="funname != null">
+        #{funname,jdbcType=VARCHAR},
+      </if>
+      <if test="funurl != null">
+        #{funurl,jdbcType=VARCHAR},
+      </if>
+      <if test="funstate != null">
+        #{funstate,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.nuc.movie.entity.Sysfunction">
+    update sysfunction
+    <set>
+      <if test="sysFunid != null">
+        sys_funid = #{sysFunid,jdbcType=INTEGER},
+      </if>
+      <if test="funname != null">
+        funname = #{funname,jdbcType=VARCHAR},
+      </if>
+      <if test="funurl != null">
+        funurl = #{funurl,jdbcType=VARCHAR},
+      </if>
+      <if test="funstate != null">
+        funstate = #{funstate,jdbcType=INTEGER},
+      </if>
+    </set>
+    where funid = #{funid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.nuc.movie.entity.Sysfunction">
+    update sysfunction
+    set sys_funid = #{sysFunid,jdbcType=INTEGER},
+      funname = #{funname,jdbcType=VARCHAR},
+      funurl = #{funurl,jdbcType=VARCHAR},
+      funstate = #{funstate,jdbcType=INTEGER}
+    where funid = #{funid,jdbcType=INTEGER}
+  </update>
+</mapper>

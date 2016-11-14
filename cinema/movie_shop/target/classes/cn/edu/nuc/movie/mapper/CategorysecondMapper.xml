@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nuc.movie.dao.CategorysecondMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.nuc.movie.entity.Categorysecond">
+    <id column="csid" jdbcType="INTEGER" property="csid" />
+    <result column="cid" jdbcType="INTEGER" property="cid" />
+    <result column="csname" jdbcType="VARCHAR" property="csname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    csid, cid, csname
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from categorysecond
+    where csid = #{csid,jdbcType=INTEGER}
+  </select>
+  <select id="findAll" resultMap="BaseResultMap">
+      select 
+    <include refid="Base_Column_List" />
+    from categorysecond
+  </select>
+  
+  <select id="findByPage" parameterType="int" resultType="cn.edu.nuc.movie.entity.Categorysecond">
+      SELECT
+		<include refid="Base_Column_List" />
+	  FROM
+		categorysecond 
+	order by csid desc
+	LIMIT #{begin},#{limit} 
+  </select>
+  
+  <select id="findCategorysecondCount" resultType="int">
+  select count(*) from categorysecond
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from categorysecond
+    where csid = #{csid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.nuc.movie.entity.Categorysecond">
+    insert into categorysecond (csid, cid, csname
+      )
+    values (#{csid,jdbcType=INTEGER}, #{cid,jdbcType=INTEGER}, #{csname,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.nuc.movie.entity.Categorysecond">
+    insert into categorysecond
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="csid != null">
+        csid,
+      </if>
+      <if test="cid != null">
+        cid,
+      </if>
+      <if test="csname != null">
+        csname,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="csid != null">
+        #{csid,jdbcType=INTEGER},
+      </if>
+      <if test="cid != null">
+        #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="csname != null">
+        #{csname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.nuc.movie.entity.Categorysecond">
+    update categorysecond
+    <set>
+      <if test="cid != null">
+        cid = #{cid,jdbcType=INTEGER},
+      </if>
+      <if test="csname != null">
+        csname = #{csname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where csid = #{csid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.nuc.movie.entity.Categorysecond">
+    update categorysecond
+    set cid = #{cid,jdbcType=INTEGER},
+      csname = #{csname,jdbcType=VARCHAR}
+    where csid = #{csid,jdbcType=INTEGER}
+  </update>
+</mapper>

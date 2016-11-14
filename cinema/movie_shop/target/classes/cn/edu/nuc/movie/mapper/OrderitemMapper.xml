@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.edu.nuc.movie.dao.OrderitemMapper">
+  <resultMap id="BaseResultMap" type="cn.edu.nuc.movie.entity.Orderitem">
+  
+    <id column="itemid" jdbcType="INTEGER" property="itemid" />
+   
+    <result column="oid" jdbcType="INTEGER" property="oid" />
+    <result column="count" jdbcType="INTEGER" property="count" />
+    <result column="subtotal" jdbcType="DECIMAL" property="subtotal" />
+    <association property="orders" javaType="cn.edu.nuc.movie.entity.Orders" column="oid">  
+        <id column="oid" jdbcType="INTEGER" property="oid" />
+	    <result column="total" jdbcType="DECIMAL" property="total" />
+	    <result column="ordertime" jdbcType="DATE" property="ordertime" />
+	    <result column="state" jdbcType="INTEGER" property="state" />
+	    <result column="name" jdbcType="VARCHAR" property="name" />
+	    <result column="phone" jdbcType="VARCHAR" property="phone" />
+	    <result column="addr" jdbcType="VARCHAR" property="addr" />
+    </association>
+    <association property="movie" javaType="cn.edu.nuc.movie.entity.Movie" column="movieid">  
+       <id column="movieid" jdbcType="INTEGER" property="movieid" />
+	   <result column="csid" jdbcType="INTEGER" property="csid" />
+	   <result column="mname" jdbcType="VARCHAR" property="mname" />
+	   <result column="mimage" jdbcType="VARCHAR" property="mimage" />
+    </association> 
+  </resultMap>
+  
+  <sql id="Base_Column_List">
+    itemid, movieid, oid, count, subtotal
+  </sql>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from orderitem
+    where itemid = #{itemid,jdbcType=INTEGER}
+  </select>
+  <select id="findOrderItemByOid" parameterType="cn.edu.nuc.movie.entity.Orderitem" resultMap="BaseResultMap" >
+    select 
+    itemid,o.movieid,m.mname,mimage,oid, count, subtotal
+    from orderitem o ,movie m
+    where oid = #{oid,jdbcType=INTEGER} and (select movieid from orderitem where oid=1) = m.movieid
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from orderitem
+    where itemid = #{itemid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cn.edu.nuc.movie.entity.Orderitem">
+    insert into orderitem (itemid, movieid, oid, 
+      count, subtotal)
+    values (#{itemid,jdbcType=INTEGER}, #{movieid,jdbcType=INTEGER}, #{oid,jdbcType=INTEGER}, 
+      #{count,jdbcType=INTEGER}, #{subtotal,jdbcType=DECIMAL})
+  </insert>
+  <insert id="insertSelective" parameterType="cn.edu.nuc.movie.entity.Orderitem">
+    insert into orderitem
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="itemid != null">
+        itemid,
+      </if>
+      <if test="movieid != null">
+        movieid,
+      </if>
+      <if test="oid != null">
+        oid,
+      </if>
+      <if test="count != null">
+        count,
+      </if>
+      <if test="subtotal != null">
+        subtotal,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="itemid != null">
+        #{itemid,jdbcType=INTEGER},
+      </if>
+      <if test="movieid != null">
+        #{movieid,jdbcType=INTEGER},
+      </if>
+      <if test="oid != null">
+        #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        #{count,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null">
+        #{subtotal,jdbcType=DECIMAL},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cn.edu.nuc.movie.entity.Orderitem">
+    update orderitem
+    <set>
+      <if test="movieid != null">
+        movieid = #{movieid,jdbcType=INTEGER},
+      </if>
+      <if test="oid != null">
+        oid = #{oid,jdbcType=INTEGER},
+      </if>
+      <if test="count != null">
+        count = #{count,jdbcType=INTEGER},
+      </if>
+      <if test="subtotal != null">
+        subtotal = #{subtotal,jdbcType=DECIMAL},
+      </if>
+    </set>
+    where itemid = #{itemid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cn.edu.nuc.movie.entity.Orderitem">
+    update orderitem
+    set movieid = #{movieid,jdbcType=INTEGER},
+      oid = #{oid,jdbcType=INTEGER},
+      count = #{count,jdbcType=INTEGER},
+      subtotal = #{subtotal,jdbcType=DECIMAL}
+    where itemid = #{itemid,jdbcType=INTEGER}
+  </update>
+</mapper>
